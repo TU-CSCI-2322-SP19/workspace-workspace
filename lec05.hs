@@ -22,7 +22,7 @@ numNonZero (0:xs) = numNonZero xs
 --numNonZero (x:xs) = if x == 0 else numNonZero xs else 1 + numNonZero xs 
 
 --myMaximum :: Ord a => [a] -> a
-myMaximum [] = 0
+myMaximum [] = error "AAAH"
 myMaximum [x] = x
 myMaximum (x:xs) = 
     let maxxs = myMaximum xs
