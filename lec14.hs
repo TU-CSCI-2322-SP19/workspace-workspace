@@ -26,5 +26,6 @@ myElem y (x:xs) = if x == y then True else myElem y xs
 count :: Eq a => a -> [a] -> Int
 count y lst = foldl (\acc x -> if y == x then 1 + acc else acc) 0 lst
 
-myMaximum lst = foldl (\acc x -> if x > acc then x else acc) (error "AAH") lst
+myMaximum [] = error "No maximum of an empty list."
+myMaximum lst = foldl (\acc x -> if x > acc then x else acc) (head lst) lst
 
