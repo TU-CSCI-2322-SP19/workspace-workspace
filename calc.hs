@@ -39,5 +39,9 @@ parsedStr = OperNode Minus (OperNode Plus (ValueNode 7)
 
 unlex :: [Token] -> String
 unlex = undefined
+
+eval :: ParseTree -> ???
+eval = undefined 
+
 parse :: [Token] -> ParseTree
 parse = undefined
