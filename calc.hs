@@ -38,10 +38,22 @@ parsedStr = OperNode Minus (OperNode Plus (ValueNode 7)
                            )
 
 unlex :: [Token] -> String
-unlex = undefined
+unlex toks = concatmap showTok toks
+  where showTok :: Token -> String
+        showTok (OperT op) = case op of 
+                                Plus -> "+"
+                                Minus -> "-"
+                                Mult -> "*"
+                                Div -> "/"
+        showTok (ValueT x) = show x
 
-eval :: ParseTree -> ???
-eval = undefined 
+
+--unlex toks makes a string str such that map dangerlex (words str) would return toks
+
+--pprint :: ParseTree -> String
+
+--eval :: ParseTree -> ???
+--eval = undefined 
 
 parse :: [Token] -> ParseTree
 parse = undefined
