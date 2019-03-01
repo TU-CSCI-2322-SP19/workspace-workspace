@@ -38,7 +38,7 @@ parsedStr = OperNode Minus (OperNode Plus (ValueNode 7)
                            )
 
 unlex :: [Token] -> String
-unlex toks = concatmap showTok toks
+unlex toks = unwords $ map showTok toks
   where showTok :: Token -> String
         showTok (OperT op) = case op of 
                                 Plus -> "+"
