@@ -52,8 +52,23 @@ unlex toks = unwords $ map showTok toks
 
 --pprint :: ParseTree -> String
 
---eval :: ParseTree -> ???
---eval = undefined 
+eval :: ParseTree -> Int
+eval (ValueNode x) = x
+eval (OperNode op l r) = let lv = eval l
+                             rv = eval r
+                             ov = evalOp op
+                         in lv `ov` rv
+        where evalOp :: Op -> Int -> Int -> Int
+              evalOp Plus x y = x + y
+              evalOp Minus x y = x - y
+              evalOp Mult x y = x * y
+              evalOp Div x y = x `div` y
 
 parse :: [Token] -> ParseTree
 parse = undefined
+
+
+foo = let x = 10
+          y = 20
+          z = 30
+       in x + y + z
