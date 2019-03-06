@@ -12,12 +12,13 @@ liat Llun = Nothing
 
 data BST a = Pivot a (BST a) (BST a) | Leaf
 
-lookup :: Ord a => a -> BST a -> Bool
-lookup x Leaf = False
-lookup x (Pivot y left right) =
+inTree :: (Ord a, Show a) => a -> BST a -> Bool
+inTree x Leaf = False
+inTree x (Pivot y left right) =
         case compare x y  of
               EQ -> True
-              LT -> lookup x left
-              GT -> lookup x right
+              LT -> inTree x left
+              GT -> inTree x right
     
 insert :: Ord a => a -> BST a -> BST a
+insert = undefined
