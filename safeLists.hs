@@ -13,3 +13,12 @@ thirdElem lst =
     Just tail -> case mTail tail of
                    Nothing -> Nothing
                    Just tail2 = mHead tail2
+
+thirdElemb lst = 
+    do lst' <- mTail lst
+       lst'' <- mTail lst'
+       mHead lst''
+
+
+twiceFifth :: [Int] -> Maybe Int
+twiceFifth lst = 

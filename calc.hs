@@ -46,22 +46,19 @@ unlex toks = unwords $ map showTok toks
 
 eval :: ParseTree -> Maybe Int
 eval (ValueNode x) = Just x
-eval (OperNode op l r) = do lv <- eval l
+{-eval (OperNode op l r) = do lv <- eval l
                             rv <- eval r
                             let ov = evalOp op
                             lv `ov` rv
-{-
- - eval (OperNode op l r) = let lv = fromJust $ eval l
+ eval (OperNode op l r) = let lv = fromJust $ eval l
                              rv = fromJust $ eval r
                              ov = evalOp op
                          in lv `ov` rv
-eval (OperNode op l r) = case eval l of
-                              Nothing -> Nothing
-                              Just lv -> case eval r of
-                                            Nothing -> Nothing
-                                            Just rv -> let ov = evalOp op
-                                                       in lv `ov` rv
--}
+                         -}
+eval (OperNode op l r) = case (eval l, eval r) of
+                              (Just lv, Just rv) -> let ov = evalOp op
+                                                    in lv `ov` rv
+                              _ -> Nothing
 evalOp :: Op -> Int -> Int -> Maybe Int
 evalOp Minus x y = Just $ x - y
 evalOp Mult x y = Just $ x * y
