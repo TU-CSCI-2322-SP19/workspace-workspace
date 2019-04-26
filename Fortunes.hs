@@ -2,6 +2,28 @@ import System.Environment
 import System.IO
 import System.Console.GetOpt
 
+-- Problem 1 will be done as a class.
+-- --   1) Figure out how to implement the "Count" flag.
+-- -- 
+-- -- Core Exercise: Problems 2-4
+-- --   2) Stop asking for a number each time: just give them the next fortune in the list.
+-- --   3) Implement the 'Start' flag. If provided, don't ask for a number.
+-- --   3) Make an action getBool :: IO Bool to get a Yes/No response. 
+-- --     Accept yes/y no/n in any captilization. If they input anything else, ask again.
+--
+-- -- Extra Fun Problems: Feature creep! Ask the user what they want. Support the following
+-- requests: 
+-- -- Hint: Make an "Request" data-type and a parseRequest:: String -> Request function. 
+-- --   5) "Give me a fortune" (or any string with fortune in it)
+-- --       Ask for a number, and print out the corresponding fortune
+-- --   6) "Remember _______" Treat the blank as a 'to-do', and print out a reminder on every prompt
+-- --   7) "Remind me" Only print out the reminder when requested.
+-- --   8) Make parseRequest more robust: return a Maybe Request. 
+-- --   9) "What is _____":  Evaluates a prefix mathematical expression and print the result.
+-- --      You'll need to import Calc
+--
+--
+
 data Flag = Help | Start String | Count String deriving (Eq, Show)
 
 options :: [OptDescr Flag]
