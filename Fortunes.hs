@@ -8,7 +8,7 @@ import System.Console.GetOpt
 -- -- Core Exercise: Problems 2-4
 -- --   2) Stop asking for a number each time: just give them the next fortune in the list.
 -- --   3) Implement the 'Start' flag. If provided, don't ask for a number.
--- --   3) Make an action getBool :: IO Bool to get a Yes/No response. 
+-- --   4) Make an action getBool :: IO Bool to get a Yes/No response. 
 -- --     Accept yes/y no/n in any captilization. If they input anything else, ask again.
 --
 -- -- Extra Fun Problems: Feature creep! Ask the user what they want. Support the following
@@ -42,7 +42,13 @@ main = do args <- getArgs
                      let fortunes = lines fortuneText
                      name <- prompt "What is your name? "
                      putStr $ "Welcome " ++ name ++ ". "
-                     tellFortune fortunes
+                     tellFortune fortunes (getCount flags)
+
+getCount :: [Flag] -> Int
+getCount ((Count x):fs) = (read x)
+getCount (_:fs) = getCount fs
+getCount [] = 1
+
 
 prompt :: String -> IO String
 prompt str = do
@@ -54,16 +60,20 @@ prompt str = do
 getBool :: IO Bool
 getBool = undefined
 
-tellFortune :: [String] -> IO ()
-tellFortune fortunes = do
+tellFortune :: [String] -> Int -> IO ()
+tellFortune fortunes count = do
   answer <- prompt "Do you want a fortune?"
   if answer == "yes"
   then do index <- prompt "Please give me a number: "
-          putStrLn $ "Your fortune: " ++ fortunes `at` (read index) 
-          tellFortune fortunes
+          putStrLn $ "Your fortunes: " ++ (unlines $ fromTo fortunes (read index)  count) 
+          tellFortune fortunes count
   else putStr "Goodbye."
 
 at :: [a] -> Int -> a
 --at lst index = lst !! (index `mod` (length lst))
 at lst index = (cycle lst) !! index
+
+fromTo :: [a] -> Int -> Int -> [a]
+--at lst index = lst !! (index `mod` (length lst))
+fromTo lst index count = take count (drop index (cycle lst))
     
