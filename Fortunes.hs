@@ -32,22 +32,16 @@ options = [ Option ['h'] ["help", "why"] (NoArg Help) "Print a help message and 
           , Option ['k'] ["kount"] (ReqArg Count "<num>") "Print <num> fortunes each time."
           ]
 
-main :: IO ()
-main = do args <- getArgs
-          let (flags, others, errors) = getOpt Permute options args
-          if Help `elem` flags || (not $ null errors)
-          then putStrLn $ usageInfo "Fortunes [OPTIONS...] [file]" options
-          else let fileName = if null others then "fortunes.txt" else head others
-               in do fortuneText <- readFile fileName
-                     let fortunes = lines fortuneText
-                     name <- prompt "What is your name? "
-                     putStr $ "Welcome " ++ name ++ ". "
-                     tellFortune fortunes (getCount flags)
 
 getCount :: [Flag] -> Int
 getCount ((Count x):fs) = (read x)
 getCount (_:fs) = getCount fs
 getCount [] = 1
+
+getStart :: [Flag] -> IO Int
+getStart ((Start x):fs) = return (read x)
+getStart (_:fs) = getStart fs
+getStart [] = fmap read (prompt "Please give me a number: ")
 
 
 prompt :: String -> IO String
@@ -60,20 +54,30 @@ prompt str = do
 getBool :: IO Bool
 getBool = undefined
 
-tellFortune :: [String] -> Int -> IO ()
-tellFortune fortunes count = do
-  answer <- prompt "Do you want a fortune?"
-  if answer == "yes"
-  then do index <- prompt "Please give me a number: "
-          putStrLn $ "Your fortunes: " ++ (unlines $ fromTo fortunes (read index)  count) 
-          tellFortune fortunes count
-  else putStr "Goodbye."
 
 at :: [a] -> Int -> a
 --at lst index = lst !! (index `mod` (length lst))
 at lst index = (cycle lst) !! index
 
-fromTo :: [a] -> Int -> Int -> [a]
---at lst index = lst !! (index `mod` (length lst))
-fromTo lst index count = take count (drop index (cycle lst))
+tellFortune :: [String] -> Int -> IO ()
+tellFortune fortunes count = do
+  answer <- prompt "Do you want a fortune?"
+  if answer == "yes"
+  then do 
+          putStrLn $ "Your fortunes: " ++ (unlines $ take count fortunes) 
+          tellFortune (drop count fortunes) count 
+  else putStr "Goodbye."
     
+main :: IO ()
+main = do args <- getArgs
+          let (flags, others, errors) = getOpt Permute options args
+          if Help `elem` flags || (not $ null errors)
+          then putStrLn $ usageInfo "Fortunes [OPTIONS...] [file]" options
+          else do let fileName = if null others then "fortunes.txt" else head others
+                  fortuneText <- readFile fileName
+                  let fortunes = lines fortuneText
+                  name <- prompt "What is your name? "
+                  putStr $ "Welcome " ++ name ++ ". "
+                  start <- getStart flags 
+                  let fortunesToTell = drop start (cycle fortunes)
+                  tellFortune fortunesToTell (getCount flags) 
